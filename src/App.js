@@ -4,7 +4,10 @@ import {
   NavLink,
   Routes,
   Route,
-  useNavigate
+  useNavigate,
+  useParams,
+  Outlet,
+  Link
 } from 'react-router-dom';
 
 const Logout = () => {
@@ -12,6 +15,7 @@ const Logout = () => {
     return <button onClick={()=>navigate('/login')}>登出</button>
 }
 
+const defaultPostId = [110,225,316]
 const Todo = () => {
   return (
       <>
@@ -25,6 +29,29 @@ const Login = () => {
 };
 const Register = () => {
   return <p>這是註冊頁面</p>;
+};
+
+
+const Post = () => {
+    return (
+        <div>
+            <h3>Post詳細資料</h3>
+            {defaultPostId.map((value, index)=>{
+
+                return (
+                    <li key={index}>
+                        <Link to={`/post/` + value}>{`第${value}篇Post`}</Link>
+                    </li>
+                );
+            })}
+            <Outlet />
+        </div>
+    );
+};
+
+const PostId = () => {
+    let params = useParams();
+    return <p>PostID: {params.postId}</p>;
 };
 
 function App() {
@@ -44,12 +71,18 @@ function App() {
                   <NavLink to="/todo">
                       <p>Todo 頁面</p>
                   </NavLink>
+                  <NavLink to="/post">
+                      <p>Post 頁面</p>
+                  </NavLink>
               </div>
               {/* Routes, Route 練習區 */}
               <Routes>
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/todo" element={<Todo />} />
+                  <Route path="/post" element={<Post />}>
+                      <Route path=":postId" element={<PostId />} />
+                  </Route>
               </Routes>
               {/* 練習區 */}
           </HashRouter>
